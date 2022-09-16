@@ -15,7 +15,5 @@ public interface ItemService {
 
     void deleteItem(long id, long ownerId);
 
-    void checkOwner(long itemId, long ownerId);
-
     List<ItemDto> getItemsByQuery(String query);
 }

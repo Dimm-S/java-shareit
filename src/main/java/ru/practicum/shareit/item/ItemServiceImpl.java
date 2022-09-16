@@ -55,13 +55,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void checkOwner(long itemId, long ownerId) {
-        if (ownerId != itemRepository.getItemById(itemId).getOwner().getId()) {
-            throw new NotFoundException("User with id=" + ownerId + " is not owner of item=" + itemId);
-        }
-    }
-
-    @Override
     public List<ItemDto> getItemsByQuery(String query) {
         if (query.equals("")) {
             return new ArrayList<>();
@@ -69,5 +62,11 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.getItemsByQuery(query).stream()
                 .map(itemMapping::mapToItemDto)
                 .collect(Collectors.toList());
+    }
+
+    private void checkOwner(long itemId, long ownerId) {
+        if (ownerId != itemRepository.getItemById(itemId).getOwner().getId()) {
+            throw new NotFoundException("User with id=" + ownerId + " is not owner of item=" + itemId);
+        }
     }
 }

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ItemRepositoryInMemory implements ItemRepository {
     private final Map<Long, Item> items = new HashMap<>();
-    long id = 0;
+    private long id = 0;
 
     @Override
     public Item saveItem(Item item) {

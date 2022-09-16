@@ -19,7 +19,7 @@ public class UserController {
 
     @PostMapping
     public UserDto addUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
-        log.info("Request endpoint: 'POST /users' (добавление нового пользователя)");
+        log.info("Request endpoint: 'POST /users' (добавление нового пользователя {})", userDto);
         return userService.saveUser(userDto);
     }
 
@@ -38,7 +38,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public UserDto updateUser(@PathVariable long id,
                               @Validated({Update.class}) @RequestBody UserDto userDto) {
-        log.info("Request endpoint: 'PATCH /users/{}' (Обновление пользователя по id)", id);
+        log.info("Request endpoint: 'PATCH /users/{}' (Обновление пользователя по id {})", id, userDto);
         return userService.updateUser(id, userDto);
     }
 

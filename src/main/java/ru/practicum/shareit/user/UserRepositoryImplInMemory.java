@@ -11,7 +11,7 @@ import java.util.Map;
 @Repository
 public class UserRepositoryImplInMemory implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
-    long id = 0;
+    private long id = 0;
 
     @Override
     public User saveUser(User user) {

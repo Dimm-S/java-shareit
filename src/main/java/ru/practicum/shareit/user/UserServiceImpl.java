@@ -57,7 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkEmailExistence(UserDto userDto) {
-        if (userRepository.getAllUsers().stream().map(User::getEmail).collect(Collectors.toList()).contains(userDto.getEmail())) {
+        if (userRepository.getAllUsers()
+                .stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList())
+                .contains(userDto.getEmail())) {
             log.error("ValidationException: {}", "User email already used");
             throw new ValidationException("User email already used");
         }

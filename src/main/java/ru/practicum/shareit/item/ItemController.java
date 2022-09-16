@@ -20,7 +20,7 @@ public class ItemController {
     @PostMapping
     public ItemDto addItem(@Validated({Create.class}) @RequestBody ItemDto itemDto,
                            @RequestHeader(value = "X-Sharer-User-Id", required = true) long ownerId) {
-        log.info("Request endpoint: 'POST /items' (добавление новой вещи)");
+        log.info("Request endpoint: 'POST /items' (добавление новой вещи {}, владелец {})", itemDto, ownerId);
         return itemService.saveItem(itemDto, ownerId);
     }
 
@@ -28,7 +28,7 @@ public class ItemController {
     public ItemDto updateItem(@PathVariable long id,
                               @Validated({Update.class}) @RequestBody ItemDto itemDto,
                               @RequestHeader(value = "X-Sharer-User-Id", required = true) long ownerId) {
-        log.info("Request endpoint: 'PATCH /items' (обновление вещи)");
+        log.info("Request endpoint: 'PATCH /items/{}' (обновление вещи {}, владелец {})", id, itemDto, ownerId);
         return itemService.updateItem(id, itemDto, ownerId);
     }
 
@@ -40,7 +40,7 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllItemsByUserId(@RequestHeader(value = "X-Sharer-User-Id", required = true) long userId) {
-        log.info("Request endpoint: 'GET /items' (Получение списка всех вещей по id пользователя)");
+        log.info("Request endpoint: 'GET /items' (Получение списка всех вещей по id пользователя {})", userId);
         return itemService.getAllItems(userId);
     }
 
@@ -53,6 +53,7 @@ public class ItemController {
     @DeleteMapping("/{id}")
     public void deleteItem(@PathVariable long id,
                            @RequestHeader(value = "X-Sharer-User-Id", required = true) long ownerId) {
+        log.info("Request endpoint: 'DELETE /items/{}' (Удаление вещи по id, владелец {})", id, ownerId);
         itemService.deleteItem(id, ownerId);
     }
 }
