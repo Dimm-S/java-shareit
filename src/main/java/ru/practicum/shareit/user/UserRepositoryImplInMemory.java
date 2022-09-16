@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 

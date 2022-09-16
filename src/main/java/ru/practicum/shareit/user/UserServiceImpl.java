@@ -19,16 +19,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto saveUser(UserDto userDto) {
         checkEmailExistence(userDto);
-        return userMapping.mapToUserDto
-                (userRepository.saveUser
-                        (userMapping.mapToUser(userDto)));
+        return userMapping.mapToUserDto(
+                userRepository.saveUser(
+                        userMapping.mapToUser(userDto)));
     }
 
     @Override
     public UserDto getUserById(long id) {
         checkUserExistence(id);
-        return userMapping.mapToUserDto
-                (userRepository.getUserById(id));
+        return userMapping.mapToUserDto(
+                userRepository.getUserById(id));
     }
 
     @Override
@@ -42,9 +42,9 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(long id, UserDto userDto) {
         checkEmailExistence(userDto);
         checkUserExistence(id);
-        return userMapping.mapToUserDto
-                (userRepository.updateUser
-                        (id, userMapping.mapToUser(userDto)));
+        return userMapping.mapToUserDto(
+                userRepository.updateUser(
+                        id, userMapping.mapToUser(userDto)));
     }
 
     @Override
