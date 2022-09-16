@@ -6,10 +6,16 @@ import java.util.List;
 
 public interface ItemService {
     ItemDto saveItem(ItemDto itemDto, long ownerId);
+
     ItemDto getItemById(long id);
+
     List<ItemDto> getAllItems(long userId);
+
     ItemDto updateItem(long id, ItemDto itemDto, long ownerId);
+
     void deleteItem(long id, long ownerId);
+
     void checkOwner(long itemId, long ownerId);
-    List<ItemDto> getItemsByQuery (String query);
+
+    List<ItemDto> getItemsByQuery(String query);
 }

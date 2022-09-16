@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.shareit.Create;
-import ru.practicum.shareit.Update;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;

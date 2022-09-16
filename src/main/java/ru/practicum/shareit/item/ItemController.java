@@ -45,14 +45,14 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItemsByQuery (@RequestParam(value = "text", required = false) String query) {
+    public List<ItemDto> getItemsByQuery(@RequestParam(value = "text", required = false) String query) {
         log.info("Request endpoint: 'GET /items/search?query={}'", query);
         return itemService.getItemsByQuery(query);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteItem (@PathVariable long id,
-                            @RequestHeader(value = "X-Sharer-User-Id", required = true) long ownerId) {
+    public void deleteItem(@PathVariable long id,
+                           @RequestHeader(value = "X-Sharer-User-Id", required = true) long ownerId) {
         itemService.deleteItem(id, ownerId);
     }
 }
