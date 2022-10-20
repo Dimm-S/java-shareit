@@ -24,13 +24,13 @@ public class BookingServiceImpl implements BookingService {
     private final ItemService itemService;
 
     @Override
-    public BookingDto saveBooking(BookingDto bookingDto, Long bookerId) {
+    public BookingInfoDto saveBooking(BookingDto bookingDto, Long bookerId) {
         userService.checkUserExistence(bookerId);
         if (itemService.getItemById(bookingDto.getItemId(), bookerId).getOwnerId().equals(bookerId)) {
             throw new NotFoundException("User can't booking own item");
         }
         itemService.checkItemAvailable(bookingDto);
-        return bookingMapping.mapToBookingDto(
+        return bookingMapping.mapToBookingInfoDto(
                 bookingRepository.save(
                         bookingMapping.mapToBooking(bookingDto, bookerId, Status.WAITING)));
     }
