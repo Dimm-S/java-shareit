@@ -36,8 +36,7 @@ CREATE TABLE IF NOT EXISTS bookings
     id serial NOT NULL CONSTRAINT pk_booking PRIMARY KEY,
     start_date timestamp without time zone,
     end_date timestamp without time zone,
-    item_id bigint NOT NULL CONSTRAINT fk_item_id REFERENCES items (id),
+    item_id bigint NOT NULL CONSTRAINT fk_items_id REFERENCES items (id),
     booker_id bigint NOT NULL CONSTRAINT fk_booker_id REFERENCES users (id),
     status int
 );
-TRUNCATE users, requests, items, comments, bookings RESTART IDENTITY CASCADE;
