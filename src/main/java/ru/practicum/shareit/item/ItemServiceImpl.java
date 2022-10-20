@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -145,7 +146,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkOwner(Long itemId, Long ownerId) {
-        if (ownerId != itemRepository.getReferenceById(itemId).getOwnerId()) {
+        if (!Objects.equals(ownerId, itemRepository.getReferenceById(itemId).getOwnerId())) {
             throw new NotFoundException("User with id=" + ownerId + " is not owner of item=" + itemId);
         }
     }
