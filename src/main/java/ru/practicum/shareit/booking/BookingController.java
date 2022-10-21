@@ -43,18 +43,18 @@ public class BookingController {
     @GetMapping
     public List<BookingInfoDto> getAllBookingsByUserId(
             @RequestHeader(value = "X-Sharer-User-Id", required = true) Long userId,
-            @RequestParam(value = "state", required = false, defaultValue = "ALL") String status) {
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
         log.info("Request endpoint: 'GET /bookings?state'" +
-                " (Получение всех бронирований пользователя {} со статусом {})", userId, status);
-        return bookingService.getAllBookingsByUserId(userId, status);
+                " (Получение всех бронирований пользователя {} со статусом {})", userId, state);
+        return bookingService.getAllBookingsByUserId(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingInfoDto> getAllBookingsByOwnerId(
             @RequestHeader(value = "X-Sharer-User-Id", required = true) Long ownerId,
-            @RequestParam(value = "state", required = false, defaultValue = "ALL") String status) {
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
         log.info("Request endpoint: 'GET /bookings/owner?state'" +
-                " Получение всех бронирований владельца {} со статусом {}", ownerId, status);
-        return bookingService.getAllBookingsByOwnerId(ownerId, status);
+                " Получение всех бронирований владельца {} со статусом {}", ownerId, state);
+        return bookingService.getAllBookingsByOwnerId(ownerId, state);
     }
 }

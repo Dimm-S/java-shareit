@@ -120,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemsByQuery(String query) {
-        if (query.equals("")) {
+        if ("".equals(query)) {
             return new ArrayList<>();
         }
         return itemRepository.findAll().stream()

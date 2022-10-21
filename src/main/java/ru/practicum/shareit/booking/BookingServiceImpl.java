@@ -38,12 +38,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingInfoDto approveBookingById(Long bookingId, Long ownerId, Boolean approved) {
         Booking booking = bookingRepository.getReferenceById(bookingId);
-        if (!bookingMapping.mapToBookingInfoDto(booking).getItem().getOwnerId().equals(ownerId)) {
-            throw new NotFoundException("User " + ownerId + " is not owner of item " + booking.getItemId());
-        }
-        if (booking.getStatus().equals(Status.APPROVED)) {
-            throw new BadRequestException("Booking " + bookingId + " already approved");
-        }
+        checkOwnerOfItem(booking, ownerId);
+        checkCurrentStatus(booking, bookingId);
         if (approved) {
             booking.setStatus(Status.APPROVED);
         } else {
@@ -60,26 +56,25 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingInfoDto> getAllBookingsByUserId(Long userId, String status) {
+    public List<BookingInfoDto> getAllBookingsByUserId(Long userId, String state) {
         userService.checkUserExistence(userId);
-        if (Arrays.stream(Status.values()).noneMatch(status1 -> status1.toString().equals(status))) {
-            throw new BadRequestException("Unknown state: " + status);
-        }
+        checkState(state);
+        Status status = Status.valueOf(state);
         List<Booking> bookingList = bookingRepository.findAllBookingsByBookerId(userId);
-        if (status.equals("ALL")) {
+        if (Status.ALL.equals(status)) {
             return bookingList.stream()
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("FUTURE")) {
+        if (Status.FUTURE.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getStartDate().isAfter(LocalDateTime.now()))
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("CURRENT")) {
+        if (Status.CURRENT.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getStartDate().isBefore(LocalDateTime.now()))
                     .filter(booking -> booking.getEndDate().isAfter(LocalDateTime.now()))
@@ -87,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("PAST")) {
+        if (Status.PAST.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getEndDate().isBefore(LocalDateTime.now()))
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
@@ -95,33 +90,31 @@ public class BookingServiceImpl implements BookingService {
                     .collect(Collectors.toList());
         }
         return bookingList.stream()
-                .filter(booking -> booking.getStatus().equals(Status.valueOf(status)))
+                .filter(booking -> booking.getStatus().equals(status))
                 .map(bookingMapping::mapToBookingInfoDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<BookingInfoDto> getAllBookingsByOwnerId(Long ownerId, String status) {
+    public List<BookingInfoDto> getAllBookingsByOwnerId(Long ownerId, String state) {
         userService.checkUserExistence(ownerId);
-        if (Arrays.stream(Status.values()).noneMatch(status1 -> status1.toString().equals(status))) {
-            throw new BadRequestException("Unknown state: " + status);
-        }
+        checkState(state);
+        Status status = Status.valueOf(state);
         List<Booking> bookingList = bookingRepository.getAllBookingsByOwnerId(ownerId);
-
-        if (status.equals("ALL")) {
+        if (Status.ALL.equals(status)) {
             return bookingList.stream()
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("FUTURE")) {
+        if (Status.FUTURE.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getStartDate().isAfter(LocalDateTime.now()))
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("CURRENT")) {
+        if (Status.CURRENT.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getStartDate().isBefore(LocalDateTime.now()))
                     .filter(booking -> booking.getEndDate().isAfter(LocalDateTime.now()))
@@ -129,27 +122,44 @@ public class BookingServiceImpl implements BookingService {
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-        if (status.equals("PAST")) {
+        if (Status.PAST.equals(status)) {
             return bookingList.stream()
                     .filter(booking -> booking.getEndDate().isBefore(LocalDateTime.now()))
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
                     .map(bookingMapping::mapToBookingInfoDto)
                     .collect(Collectors.toList());
         }
-
         return bookingList.stream()
-                .filter(booking -> booking.getStatus().equals(Status.valueOf(status)))
+                .filter(booking -> booking.getStatus().equals(status))
                 .map(bookingMapping::mapToBookingInfoDto)
                 .collect(Collectors.toList());
     }
 
-    public void checkBooking(Long id, Long userId) {
+    private void checkBooking(Long id, Long userId) {
         if (!bookingRepository.existsById(id)) {
             throw new NotFoundException("Booking with id=" + id + " not found");
         }
         var booking = bookingMapping.mapToBookingInfoDto(bookingRepository.getReferenceById(id));
         if (!booking.getBookerId().equals(userId) && !booking.getItem().getOwnerId().equals(userId)) {
             throw new NotFoundException("User " + userId + " not creator or owner booking " + id);
+        }
+    }
+
+    private void checkState(String state) {
+        if (Arrays.stream(Status.values()).noneMatch(status1 -> status1.toString().equals(state))) {
+            throw new BadRequestException("Unknown state: " + state);
+        }
+    }
+
+    private void checkOwnerOfItem(Booking booking, Long ownerId) {
+        if (!bookingMapping.mapToBookingInfoDto(booking).getItem().getOwnerId().equals(ownerId)) {
+            throw new NotFoundException("User " + ownerId + " is not owner of item " + booking.getItemId());
+        }
+    }
+
+    private void checkCurrentStatus(Booking booking, Long bookingId) {
+        if (booking.getStatus().equals(Status.APPROVED)) {
+            throw new BadRequestException("Booking " + bookingId + " already approved");
         }
     }
 }
