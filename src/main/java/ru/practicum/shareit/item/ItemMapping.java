@@ -2,15 +2,18 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.comment.dto.CommentInfoDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
-import ru.practicum.shareit.user.UserRepository;
+
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class ItemMapping {
-    private final UserRepository userRepository;
 
     public ItemDto mapToItemDto(Item item) {
         return new ItemDto(item.getId(),
@@ -19,12 +22,44 @@ public class ItemMapping {
                 item.getAvailable());
     }
 
+    public ItemInfoDto mapToItemInfoDto(Item item, Booking lBooking, Booking nBooking, List<CommentInfoDto> comments) {
+        ItemInfoDto.BookingDto lastBooking;
+        ItemInfoDto.BookingDto nextBooking;
+
+        if (lBooking == null) {
+            lastBooking = null;
+        } else {
+            lastBooking = new ItemInfoDto.BookingDto(lBooking.getId(),
+                    lBooking.getStartDate(),
+                    lBooking.getEndDate(),
+                    lBooking.getBookerId());
+        }
+
+        if (nBooking == null) {
+            nextBooking = null;
+        } else {
+            nextBooking = new ItemInfoDto.BookingDto(nBooking.getId(),
+                    nBooking.getStartDate(),
+                    nBooking.getEndDate(),
+                    nBooking.getBookerId());
+        }
+        return new ItemInfoDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getOwnerId(),
+                item.getAvailable(),
+                lastBooking,
+                nextBooking,
+                comments);
+    }
+
     public Item mapToItem(ItemDto itemDto, long ownerId) {
         return new Item(itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                userRepository.getUserById(ownerId),
-                new ItemRequest());
+                ownerId,
+                null);
     }
 }

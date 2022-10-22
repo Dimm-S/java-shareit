@@ -1,21 +1,16 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
-    Item saveItem(Item item);
+public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Item getItemById(long id);
-
-    List<Item> getAllItems(long userId);
-
-    Item updateItem(long id, Item item);
-
-    void deleteItem(long id);
-
-    void checkItemExistence(long id);
-
-    List<Item> getItemsByQuery(String query);
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM items " +
+                    "WHERE owner_id = ?")
+    List<Item> getAllItemsByUserId(Long userId);
 }

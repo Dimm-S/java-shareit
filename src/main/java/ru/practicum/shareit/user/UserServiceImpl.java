@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -18,9 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserDto userDto) {
-        checkEmailExistence(userDto);
         return userMapping.mapToUserDto(
-                userRepository.saveUser(
+                userRepository.save(
                         userMapping.mapToUser(userDto)));
     }
 
@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(long id) {
         checkUserExistence(id);
         return userMapping.mapToUserDto(
-                userRepository.getUserById(id));
+                userRepository.getReferenceById(id));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers().stream()
+        return userRepository.findAll().stream()
                 .map(userMapping::mapToUserDto)
                 .collect(Collectors.toList());
     }
@@ -42,22 +42,32 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(long id, UserDto userDto) {
         checkEmailExistence(userDto);
         checkUserExistence(id);
-        return userMapping.mapToUserDto(
-                userRepository.updateUser(
-                        id, userMapping.mapToUser(userDto)));
+        User user = userRepository.getReferenceById(id);
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
+        }
+        userRepository.save(user);
+        return userMapping.mapToUserDto(user);
     }
 
     @Override
     public void deleteUser(long id) {
-        userRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
+    @Override
     public void checkUserExistence(long id) {
-        userRepository.checkUserExistence(id);
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException("User not found");
+        }
+        ;
     }
 
     private void checkEmailExistence(UserDto userDto) {
-        if (userRepository.getAllUsers()
+        if (userRepository.findAll()
                 .stream()
                 .map(User::getEmail)
                 .collect(Collectors.toList())
