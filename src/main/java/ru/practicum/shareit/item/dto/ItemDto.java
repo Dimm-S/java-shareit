@@ -19,4 +19,5 @@ public class ItemDto {
     @NotNull(groups = {Create.class})
     @AssertTrue(groups = {Create.class})
     private Boolean available;
+    private Long requestId;
 }

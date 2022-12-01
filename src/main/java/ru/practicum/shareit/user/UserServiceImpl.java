@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -32,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
+    public List<UserDto> getAllUsers(PageRequest pageRequest) {
+        return userRepository.findAll(pageRequest).stream()
                 .map(userMapping::mapToUserDto)
                 .collect(Collectors.toList());
     }
@@ -63,7 +64,6 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found");
         }
-        ;
     }
 
     private void checkEmailExistence(UserDto userDto) {
