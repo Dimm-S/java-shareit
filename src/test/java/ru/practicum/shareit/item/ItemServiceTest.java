@@ -54,6 +54,7 @@ public class ItemServiceTest {
     final CommentInfoDto commentInfoDto = new CommentInfoDto(
             1L, "text", 1L, "name", null);
     final Item item = new Item(1L, "name", "desc", true, 1L, 1L);
+    final Item item2 = new Item(2L, "name2", "desc1", true, 1L, 1L);
     final ItemDto itemDto = new ItemDto(1L, "name", "desc", true, 1L);
     final ItemDto updItemDto = new ItemDto(1L, "updatedName", null, null, null);
     final ItemInfoDto itemInfoDto = new ItemInfoDto(1L, "name", "desc", 1L, true,
@@ -171,7 +172,11 @@ public class ItemServiceTest {
         when(itemRepository.getReferenceById(anyLong()))
                 .thenReturn(item);
         doNothing().when(itemRepository).deleteById(any());
+
         itemService.deleteItem(1L, 1L);
+
+        verify(itemRepository, times(1))
+                .deleteById(1L);
     }
 
     @Test
@@ -183,6 +188,13 @@ public class ItemServiceTest {
         final List<ItemDto> result = itemService.getItemsByQuery("de");
 
         assertEquals(new ArrayList<>(Collections.singleton(itemDto)), result);
+    }
+
+    @Test
+    void getItemByEmptyQuery() {
+        when(itemRepository.findAll())
+                .thenReturn(new ArrayList<>(Collections.singleton(item2)));
+        doCallRealMethod().when(itemMapping).mapToItemDto(any(Item.class));
 
         final List<ItemDto> result2 = itemService.getItemsByQuery("");
 

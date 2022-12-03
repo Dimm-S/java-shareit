@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -99,7 +97,7 @@ public class BookingControllerTest {
 
     @Test
     void getAllBookingsByUserIdTest() throws Exception {
-        when(bookingService.getAllBookingsByOwnerId(anyLong(), anyString(), any(PageRequest.class)))
+        when(bookingService.getAllBookingsByUserId(anyLong(), anyString(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/bookings")
@@ -111,15 +109,15 @@ public class BookingControllerTest {
                 .andExpect(content().json("[]"));
 
         verify(bookingService, times(1)).getAllBookingsByUserId(
-                1L, "ALL", PageRequest.of(0, 10, Sort.by("id").descending()));
+                1L, "ALL", 1, 10);
     }
 
     @Test
     void getAllBookingsByOwnerIdTest() throws Exception {
-        when(bookingService.getAllBookingsByOwnerId(anyLong(), anyString(), any(PageRequest.class)))
+        when(bookingService.getAllBookingsByOwnerId(anyLong(), anyString(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/bookings")
+        mockMvc.perform(get("/bookings/owner")
                         .header("X-Sharer-User-Id", 1L)
                         .param("state", "ALL")
                         .param("from", String.valueOf(1))
@@ -127,7 +125,7 @@ public class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
 
-        verify(bookingService, times(1)).getAllBookingsByUserId(
-                1L, "ALL", PageRequest.of(0, 10, Sort.by("id").descending()));
+        verify(bookingService, times(1)).getAllBookingsByOwnerId(
+                1L, "ALL", 1, 10);
     }
 }

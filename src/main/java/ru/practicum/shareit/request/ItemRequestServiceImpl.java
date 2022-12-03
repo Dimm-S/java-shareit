@@ -34,24 +34,27 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userService.checkUserExistence(userId);
         List<ItemRequest> requests = itemRequestRepository.findAllByRequesterId(userId);
         return requests.stream()
-                .map(request -> this.getRequestById(request.getId()))
+                .map(request -> this.getRequestById(request.getId(), userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemRequestInfoDto getRequestById(Long requestId) {
+    public ItemRequestInfoDto getRequestById(Long requestId, Long userId) {
         checkRequestExistence(requestId);
+        userService.checkUserExistence(userId);
         List<Item> items = itemRepository.getAllItemsByRequestId(requestId);
         ItemRequest request = itemRequestRepository.getReferenceById(requestId);
         return itemRequestMapping.mapToInfoDto(request, items);
     }
 
     @Override
-    public List<ItemRequestInfoDto> getAllOtherUsersRequests(PageRequest pageRequest, Long userId) {
+    public List<ItemRequestInfoDto> getAllOtherUsersRequests(Integer from, Integer size, Long userId) {
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
         List<ItemRequest> itemRequests = itemRequestRepository.getAllOtherUsersRequests(pageRequest, userId);
         return itemRequests.stream()
                 .map(ItemRequest::getId)
-                .map(this::getRequestById)
+                .map(id -> getRequestById(id, userId))
                 .collect(Collectors.toList());
     }
 

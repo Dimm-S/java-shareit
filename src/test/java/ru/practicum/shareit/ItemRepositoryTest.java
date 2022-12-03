@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 public class ItemRepositoryTest {
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    ItemRequestRepository itemRequestRepository;
+    private ItemRequestRepository itemRequestRepository;
 
     User user1;
     Item item1;

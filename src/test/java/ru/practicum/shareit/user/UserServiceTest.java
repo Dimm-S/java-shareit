@@ -43,7 +43,7 @@ public class UserServiceTest {
         when(userRepository.findAll(PageRequest.ofSize(10)))
                 .thenReturn(userPage);
 
-        final List<UserDto> userDtos = userService.getAllUsers(PageRequest.ofSize(10));
+        final List<UserDto> userDtos = userService.getAllUsers(1, 10);
 
         assertNotNull(userDtos);
         assertEquals(1, userDtos.size());

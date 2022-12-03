@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request;
 
-import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestInfoDto;
 
@@ -11,7 +10,7 @@ public interface ItemRequestService {
 
     List<ItemRequestInfoDto> getAllRequestsByUser(Long userId);
 
-    ItemRequestInfoDto getRequestById(Long requestId);
+    ItemRequestInfoDto getRequestById(Long requestId, Long userId);
 
-    List<ItemRequestInfoDto> getAllOtherUsersRequests(PageRequest pageRequest, Long userId);
+    List<ItemRequestInfoDto> getAllOtherUsersRequests(Integer from, Integer size, Long userId);
 }

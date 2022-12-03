@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
@@ -33,12 +32,10 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers(@PositiveOrZero @RequestParam (name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+    public List<UserDto> getAllUsers(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Request endpoint: 'GET /users' (Получение списка всех пользователей)");
-        int page = from / size;
-        final PageRequest pageRequest = PageRequest.of(page, size);
-        return userService.getAllUsers(pageRequest);
+        return userService.getAllUsers(from, size);
     }
 
     @PatchMapping("/{id}")

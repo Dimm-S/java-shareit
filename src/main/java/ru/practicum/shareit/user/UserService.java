@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
@@ -10,7 +9,7 @@ public interface UserService {
 
     UserDto getUserById(long id);
 
-    List<UserDto> getAllUsers(PageRequest pageRequest);
+    List<UserDto> getAllUsers(Integer from, Integer size);
 
     UserDto updateUser(long id, UserDto user);
 

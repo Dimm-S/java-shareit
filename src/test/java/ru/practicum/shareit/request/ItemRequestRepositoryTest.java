@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 public class ItemRequestRepositoryTest {
     @Autowired
-    ItemRequestRepository requestRepository;
+    private ItemRequestRepository requestRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     User user;
     ItemRequest itemRequest;

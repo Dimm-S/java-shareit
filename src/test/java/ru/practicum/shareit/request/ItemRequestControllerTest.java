@@ -66,7 +66,7 @@ public class ItemRequestControllerTest {
 
     @Test
     void getRequestByIdTest() throws Exception {
-        when(itemRequestService.getRequestById(anyLong()))
+        when(itemRequestService.getRequestById(anyLong(), anyLong()))
                 .thenReturn(itemRequestInfoDto);
 
         mockMvc.perform(get("/requests/" + 1)
@@ -75,7 +75,7 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.id").value(itemRequestInfoDto.getId()));
 
         verify(itemRequestService, times(1))
-                .getRequestById(1L);
+                .getRequestById(1L, 1L);
     }
 
     @Test

@@ -86,7 +86,8 @@ public class BookingServiceTest {
 
     @BeforeEach
     void setup() {
-        bookingService = new BookingServiceImpl(bookingRepository, userService, new BookingMapping(itemRepository, userRepository), itemService);
+        bookingService = new BookingServiceImpl(bookingRepository, userService,
+                new BookingMapping(itemRepository, userRepository), itemService);
     }
 
     @Test
@@ -145,7 +146,7 @@ public class BookingServiceTest {
                 .thenReturn(user);
 
         final List<BookingInfoDto> bookingInfoDtoList = bookingService.getAllBookingsByUserId(
-                1L, "WAITING", PageRequest.ofSize(10));
+                1L, "WAITING", 1, 10);
 
         assertEquals(new ArrayList<>(Collections.singleton(bookingInfoDto)), bookingInfoDtoList);
     }
@@ -160,7 +161,7 @@ public class BookingServiceTest {
                 .thenReturn(user);
 
         final List<BookingInfoDto> bookingInfoDtoList = bookingService.getAllBookingsByOwnerId(
-                1L, "WAITING", PageRequest.ofSize(10));
+                1L, "WAITING", 1, 10);
 
         assertEquals(new ArrayList<>(Collections.singleton(bookingInfoDto)), bookingInfoDtoList);
     }
@@ -175,7 +176,7 @@ public class BookingServiceTest {
                 .thenReturn(user);
 
         final List<BookingInfoDto> bookingInfoDtoList = bookingService.getAllBookingsByOwnerId(
-                1L, "CURRENT", PageRequest.ofSize(10));
+                1L, "CURRENT", 1, 10);
 
         assertEquals("CURRENT", bookingInfoDtoList.get(0).getStatus().toString());
     }
@@ -190,7 +191,7 @@ public class BookingServiceTest {
                 .thenReturn(user);
 
         final List<BookingInfoDto> bookingInfoDtoList = bookingService.getAllBookingsByOwnerId(
-                1L, "FUTURE", PageRequest.ofSize(10));
+                1L, "FUTURE", 1, 10);
 
         assertEquals(bookingInfoDto, bookingInfoDtoList.get(0));
     }
@@ -205,7 +206,7 @@ public class BookingServiceTest {
                 .thenReturn(user);
 
         final List<BookingInfoDto> bookingInfoDtoList = bookingService.getAllBookingsByOwnerId(
-                1L, "PAST", PageRequest.ofSize(10));
+                1L, "PAST", 1, 10);
 
         assertEquals(bookingInfoDtoPast, bookingInfoDtoList.get(0));
     }

@@ -6,11 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.user.UserController;
-import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Collections;
@@ -35,14 +32,14 @@ public class UserControllerTest {
 
     @Test
     void getAllUsersTest() throws Exception {
-        when(userService.getAllUsers(PageRequest.ofSize(10)))
+        when(userService.getAllUsers(any(), any()))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
 
-        verify(userService, times(1)).getAllUsers(PageRequest.ofSize(10));
+        verify(userService, times(1)).getAllUsers(0, 10);
     }
 
     @Test
