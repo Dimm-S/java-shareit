@@ -28,12 +28,12 @@ public class ItemRepositoryTest {
     @Autowired
     private ItemRequestRepository itemRequestRepository;
 
-    User user1;
-    Item item1;
-    User user2;
-    Item item2;
-    ItemRequest itemRequest1;
-    ItemRequest itemRequest2;
+    private User user1;
+    private Item item1;
+    private User user2;
+    private Item item2;
+    private ItemRequest itemRequest1;
+    private ItemRequest itemRequest2;
 
 
     @BeforeEach

@@ -17,8 +17,8 @@ public class ItemRequestRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    User user;
-    ItemRequest itemRequest;
+    private User user;
+    private ItemRequest itemRequest;
 
     @Test
     void findAllByRequesterId() {

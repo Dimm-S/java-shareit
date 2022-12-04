@@ -22,11 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
     @MockBean
-    UserService userService;
+    private UserService userService;
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     private final UserDto userDto = new UserDto(1L, "name", "name@email");
 
