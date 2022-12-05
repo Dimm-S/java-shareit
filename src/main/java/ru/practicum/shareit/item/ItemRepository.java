@@ -13,4 +13,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                     "FROM items " +
                     "WHERE owner_id = ?")
     List<Item> getAllItemsByUserId(Long userId);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM items " +
+                    "WHERE request_id = ?")
+    List<Item> getAllItemsByRequestId(Long requestId);
 }

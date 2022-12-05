@@ -55,8 +55,7 @@ public class ItemServiceImpl implements ItemService {
         return commentMapping.mapToCommentInfoDto(
                 commentRepository.save(
                         commentMapping.mapToComment(commentDto, itemId, userId)
-                ), user
-        );
+                ), user);
     }
 
     @Override

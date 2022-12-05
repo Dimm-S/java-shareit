@@ -9,7 +9,8 @@ CREATE TABLE  IF NOT EXISTS requests
 (
     id serial NOT NULL CONSTRAINT pk_request PRIMARY KEY,
     description varchar(512) NOT NULL,
-    requestor_id bigint CONSTRAINT fk_requestor_id REFERENCES users (id)
+    requester_id bigint CONSTRAINT fk_requester_id REFERENCES users (id),
+    created timestamp without time zone
 );
 
 create table if not exists items
@@ -40,3 +41,5 @@ CREATE TABLE IF NOT EXISTS bookings
     booker_id bigint NOT NULL CONSTRAINT fk_booker_id REFERENCES users (id),
     status int
 );
+
+-- TRUNCATE users, requests, items, comments, bookings restart identity;

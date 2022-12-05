@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingInfoDto;
@@ -56,51 +58,28 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingInfoDto> getAllBookingsByUserId(Long userId, String state) {
+    public List<BookingInfoDto> getAllBookingsByUserId(Long userId, String state, Integer from, Integer size) {
         userService.checkUserExistence(userId);
         checkState(state);
         Status status = Status.valueOf(state);
-        List<Booking> bookingList = bookingRepository.findAllBookingsByBookerId(userId);
-        if (Status.ALL.equals(status)) {
-            return bookingList.stream()
-                    .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
-                    .map(bookingMapping::mapToBookingInfoDto)
-                    .collect(Collectors.toList());
-        }
-        if (Status.FUTURE.equals(status)) {
-            return bookingList.stream()
-                    .filter(booking -> booking.getStartDate().isAfter(LocalDateTime.now()))
-                    .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
-                    .map(bookingMapping::mapToBookingInfoDto)
-                    .collect(Collectors.toList());
-        }
-        if (Status.CURRENT.equals(status)) {
-            return bookingList.stream()
-                    .filter(booking -> booking.getStartDate().isBefore(LocalDateTime.now()))
-                    .filter(booking -> booking.getEndDate().isAfter(LocalDateTime.now()))
-                    .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
-                    .map(bookingMapping::mapToBookingInfoDto)
-                    .collect(Collectors.toList());
-        }
-        if (Status.PAST.equals(status)) {
-            return bookingList.stream()
-                    .filter(booking -> booking.getEndDate().isBefore(LocalDateTime.now()))
-                    .sorted(Comparator.comparing((Booking::getStartDate)).reversed())
-                    .map(bookingMapping::mapToBookingInfoDto)
-                    .collect(Collectors.toList());
-        }
-        return bookingList.stream()
-                .filter(booking -> booking.getStatus().equals(status))
-                .map(bookingMapping::mapToBookingInfoDto)
-                .collect(Collectors.toList());
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
+        List<Booking> bookingList = bookingRepository.findAllBookingsByBookerId(userId, pageRequest);
+        return getBookingInfoDtos(status, bookingList);
     }
 
     @Override
-    public List<BookingInfoDto> getAllBookingsByOwnerId(Long ownerId, String state) {
+    public List<BookingInfoDto> getAllBookingsByOwnerId(Long ownerId, String state, Integer from, Integer size) {
         userService.checkUserExistence(ownerId);
         checkState(state);
         Status status = Status.valueOf(state);
-        List<Booking> bookingList = bookingRepository.getAllBookingsByOwnerId(ownerId);
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
+        List<Booking> bookingList = bookingRepository.getAllBookingsByOwnerId(ownerId, pageRequest);
+        return getBookingInfoDtos(status, bookingList);
+    }
+
+    private List<BookingInfoDto> getBookingInfoDtos(Status status, List<Booking> bookingList) {
         if (Status.ALL.equals(status)) {
             return bookingList.stream()
                     .sorted(Comparator.comparing((Booking::getStartDate)).reversed())

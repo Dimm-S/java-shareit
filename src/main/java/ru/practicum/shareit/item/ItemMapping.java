@@ -19,7 +19,8 @@ public class ItemMapping {
         return new ItemDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable());
+                item.getAvailable(),
+                item.getRequestId());
     }
 
     public ItemInfoDto mapToItemInfoDto(Item item, Booking lBooking, Booking nBooking, List<CommentInfoDto> comments) {
@@ -60,6 +61,6 @@ public class ItemMapping {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 ownerId,
-                null);
+                itemDto.getRequestId());
     }
 }

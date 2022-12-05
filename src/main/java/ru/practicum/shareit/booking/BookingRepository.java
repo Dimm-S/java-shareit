@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,10 +14,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     "FROM bookings AS b " +
                     "LEFT JOIN items AS it ON b.item_id = it.id " +
                     "WHERE it.owner_id = ?")
-    List<Booking> getAllBookingsByOwnerId(Long ownerId);
+    List<Booking> getAllBookingsByOwnerId(Long ownerId, PageRequest pageRequest);
 
     @Query
-    List<Booking> findAllBookingsByBookerId(Long bookerId);
+    List<Booking> findAllBookingsByBookerId(Long bookerId, PageRequest pageRequest);
 
     @Query(nativeQuery = true,
             value = "SELECT * " +
