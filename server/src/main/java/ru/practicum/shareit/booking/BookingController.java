@@ -17,7 +17,7 @@ public class BookingController {
 
     @PostMapping
     public BookingInfoDto addBooking(@RequestBody BookingDto bookingDto,
-                                 @RequestHeader(value = "X-Sharer-User-Id", required = true) Long bookerId) {
+                                     @RequestHeader(value = "X-Sharer-User-Id", required = true) Long bookerId) {
         log.info("Request endpoint: 'POST /bookings' (новое бронирование {} пользователем {})", bookingDto, bookerId);
         return bookingService.saveBooking(bookingDto, bookerId);
     }

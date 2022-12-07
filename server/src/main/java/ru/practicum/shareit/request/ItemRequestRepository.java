@@ -10,8 +10,8 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
     List<ItemRequest> findAllByRequesterId(Long requesterId);
 
     @Query(nativeQuery = true,
-        value = "SELECT *" +
-                "FROM requests " +
-                "WHERE requester_id != ?")
+            value = "SELECT *" +
+                    "FROM requests " +
+                    "WHERE requester_id != ?")
     List<ItemRequest> getAllOtherUsersRequests(PageRequest pageRequest, Long userId);
 }
