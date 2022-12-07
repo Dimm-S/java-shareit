@@ -13,7 +13,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Controller
 @Slf4j
